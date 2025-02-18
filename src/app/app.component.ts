@@ -1,14 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  imports: [RouterModule],
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  template: `<router-outlet></router-outlet>`,
 })
-export class AppComponent {
-  title = 'registrar-chamados';
-}
+export class AppComponent {}

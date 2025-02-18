@@ -1,0 +1,13 @@
+/* Efeito de sublinhado */
+.active-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background-color: #3c6e71; /* Caribbean Current */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Transição de cores */
+.flex-col {
+  transition: color 0.3s ease-in-out;
+}

@@ -1,0 +1,62 @@
+<app-layout>
+  <div class="p-8 bg-jet-900 min-h-screen text-white">
+    <!-- Toast Alert -->
+    <div
+      *ngIf="showToast"
+      class="fixed top-4 right-4 p-4 rounded-md shadow-lg"
+      [class.bg-green-500]="toastType === 'success'"
+      [class.bg-red-500]="toastType === 'error'"
+    >
+      {{ toastMessage }}
+    </div>
+
+    <!-- Voltar -->
+    <button
+      (click)="getBack()"
+      class="mb-6 px-4 py-2 bg-caribbean_current-500 text-white rounded-md hover:bg-caribbean_current-600"
+    >
+      Voltar
+    </button>
+
+    <!-- Detalhes do Chamado -->
+    <div class="bg-white p-6 rounded-lg shadow-lg text-black">
+      <h1 class="text-2xl font-bold mb-4">Detalhes do Chamado</h1>
+      <p><strong>Cliente:</strong> {{ call.cliente }}</p>
+      <p><strong>Descrição:</strong> {{ call.descricao }}</p>
+      <p><strong>Data-Hora:</strong> {{ call.dataHora | date : "short" }}</p>
+      <p><strong>Situação:</strong> {{ call.situacao }}</p>
+      <p><strong>Geolocalização:</strong> {{ call.geolocalizacao }}</p>
+
+      <!-- Foto -->
+      <div class="mt-4">
+        <img
+          [src]="call.foto"
+          alt="Foto do Chamado"
+          class="w-full h-auto rounded-md"
+        />
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="mt-6 flex gap-4">
+        <button
+          (click)="updateCallStatus('PENDENTE')"
+          class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+        >
+          PENDENTE
+        </button>
+        <button
+          (click)="updateCallStatus('FECHADO')"
+          class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+        >
+          FECHADO
+        </button>
+        <button
+          (click)="updateCallStatus('CANCELADO')"
+          class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+        >
+          CANCELAR
+        </button>
+      </div>
+    </div>
+  </div>
+</app-layout>

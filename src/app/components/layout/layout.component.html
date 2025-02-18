@@ -1,0 +1,12 @@
+<div class="flex flex-col min-h-screen">
+  <!-- Top Menu (Visível apenas em telas grandes) -->
+  <app-top-menu></app-top-menu>
+
+  <!-- Conteúdo da Página -->
+  <ng-content></ng-content>
+
+  <!-- Bottom Navigator (Visível apenas em telas pequenas) -->
+  <div class="lg:hidden">
+    <app-bottom-navigator></app-bottom-navigator>
+  </div>
+</div>

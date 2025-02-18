@@ -1,0 +1,61 @@
+/* Estilo para o background animado */
+.background-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.blocks {
+  position: absolute;
+  background: var(--block-color);
+  animation: float linear infinite;
+}
+
+/* Blocos individuais */
+.block-1 {
+  --block-color: #3c6e71; /* Caribbean Current */
+  --block-size: 50px;
+  --block-direction: 1;
+  width: var(--block-size);
+  height: var(--block-size);
+  top: 10%;
+  left: 20%;
+  animation-duration: 10s;
+}
+
+.block-2 {
+  --block-color: #539a9e; /* Caribbean Current 600 */
+  --block-size: 80px;
+  --block-direction: -1;
+  width: var(--block-size);
+  height: var(--block-size);
+  top: 20%;
+  left: 75%;
+  animation-duration: 15s;
+}
+
+.block-3 {
+  --block-color: #7bb6b9; /* Caribbean Current 700 */
+  --block-size: 60px;
+  --block-direction: 1;
+  width: var(--block-size);
+  height: var(--block-size);
+  top: 80%;
+  left: 80%;
+  animation-duration: 12s;
+}
+
+.block-4 {
+  --block-color: #a7ced1; /* Caribbean Current 800 */
+  --block-size: 100px;
+  --block-direction: -1;
+  width: var(--block-size);
+  height: var(--block-size);
+  top: 80%;
+  left: 10%;
+  animation-duration: 20s;
+}

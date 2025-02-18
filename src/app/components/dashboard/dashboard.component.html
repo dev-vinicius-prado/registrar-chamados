@@ -1,0 +1,36 @@
+<app-layout>
+  <div class="p-8 bg-jet-900 min-h-screen text-white">
+    <h1 class="text-3xl font-bold text-caribbean_current-500 mb-6">
+      Dashboard
+    </h1>
+
+    <!-- Filtros -->
+    <div class="mb-6 flex gap-4">
+      <button
+        *ngFor="
+          let status of ['TODOS', 'ABERTO', 'PENDENTE', 'FECHADO', 'CANCELADO']
+        "
+        (click)="filter = status; applyFilter()"
+        class="px-4 py-2 rounded-md"
+        [class.bg-caribbean_current-500]="filter === status"
+        [class.bg-gray-600]="filter !== status"
+      >
+        {{ status }}
+      </button>
+    </div>
+
+    <!-- Lista de Chamados -->
+    <div class="space-y-4">
+      <div
+        *ngFor="let call of filteredCalls"
+        class="bg-white p-4 rounded-lg shadow-lg text-black cursor-pointer"
+        (click)="detailCall(call.id)"
+      >
+        <h2 class="font-bold">{{ call.cliente }}</h2>
+        <p>{{ call.descricao }}</p>
+        <p><strong>Data-Hora:</strong> {{ call.dataHora | date : "short" }}</p>
+        <p><strong>Situação:</strong> {{ call.situacao }}</p>
+      </div>
+    </div>
+  </div>
+</app-layout>

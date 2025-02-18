@@ -1,0 +1,32 @@
+<div class="hidden lg:flex justify-between items-center
+bg-jet text-white p-4">
+  <!-- Logo -->
+  <div class="flex items-center">
+    <img src="assets/logo_1.png" alt="Logo Modularis" class="w-48 h-auto" />
+  </div>
+
+  <!-- Links de Navegação -->
+  <div class="flex gap-6">
+    <a
+      (click)="navigateTo('dashboard')"
+      class="cursor-pointer hover:text-caribbean_current-500"
+      [class.text-caribbean_current-500]="activeMenu === 'dashboard'"
+    >
+      Dashboard
+    </a>
+    <a
+      (click)="navigateTo('register-call')"
+      class="cursor-pointer hover:text-caribbean_current-500"
+      [class.text-caribbean_current-500]="activeMenu === 'register-call'"
+    >
+      Registrar Chamado
+    </a>
+    <a
+      (click)="navigateTo('profile')"
+      class="cursor-pointer hover:text-caribbean_current-500"
+      [class.text-caribbean_current-500]="activeMenu === 'profile'"
+    >
+      Perfil
+    </a>
+  </div>
+</div>

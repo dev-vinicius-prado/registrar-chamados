@@ -1,0 +1,80 @@
+<div class="fixed bottom-0 left-0 w-full bg-white shadow-lg z-50">
+  <div class="flex justify-around items-center h-16">
+    <!-- Indicador -->
+    <div
+      class="active-indicator"
+      [style.transform]="'translateX(' + getIndicatorPosition() + 'px)'"
+    ></div>
+    <!-- Dashboard -->
+    <div
+      (click)="navigateTo('dashboard')"
+      class="flex flex-col items-center cursor-pointer"
+      [class.text-caribbean_current-500]="activeMenu === 'dashboard'"
+      [class.text-gray-500]="activeMenu !== 'dashboard'"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0l-2-2m2 2V4a1 1 0 011-1h3m-3 4l2 2"
+        />
+      </svg>
+      <span class="text-xs">Dashboard</span>
+    </div>
+
+    <!-- Registrar Chamado -->
+    <div
+      (click)="navigateTo('register-call')"
+      class="flex flex-col items-center cursor-pointer"
+      [class.text-caribbean_current-500]="activeMenu === 'register-call'"
+      [class.text-gray-500]="activeMenu !== 'register-call'"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+        />
+      </svg>
+      <span class="text-xs">Registrar</span>
+    </div>
+
+    <!-- Perfil -->
+    <div
+      (click)="navigateTo('profile')"
+      class="flex flex-col items-center cursor-pointer"
+      [class.text-caribbean_current-500]="activeMenu === 'profile'"
+      [class.text-gray-500]="activeMenu !== 'profile'"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+        />
+      </svg>
+      <span class="text-xs">Perfil</span>
+    </div>
+  </div>
+</div>
