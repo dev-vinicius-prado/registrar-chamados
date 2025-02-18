@@ -5,15 +5,36 @@ import { CallDetailsComponent } from './components/details/details.component';
 import { RegisterCallComponent } from './components/register-call/register-call.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AuthGuard } from './guards/auth.guard';
-
+import { RoleGuard } from './guards/role.guard';
+import { ManagerGuard } from './guards/manager.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'register', component: RegisterCallComponent },
-  { path: 'details/:id', component: CallDetailsComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard], // Protege a rota de perfil
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard, RoleGuard],
   },
-  // Adicione outras rotas aqui
+  {
+    path: 'register',
+    component: RegisterCallComponent,
+    canActivate: [AuthGuard, RoleGuard],
+  },
+  {
+    path: 'details/:id',
+    component: CallDetailsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard, RoleGuard], // Protege a rota de perfil
+  },
+  {
+    path: 'reports',
+    component: ProfileComponent,
+    canActivate: [AuthGuard, ManagerGuard], 
+  },
+
 ];

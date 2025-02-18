@@ -33,6 +33,7 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).then(
         (response) => {
           localStorage.setItem('token', response.token);
+          localStorage.setItem('role', response.role);
           this.router.navigate(['/dashboard']);
         }
       ).catch(

@@ -76,5 +76,28 @@
       </svg>
       <span class="text-xs">Perfil</span>
     </div>
+    <!-- Relatórios -->
+    <div
+      (click)="navigateTo('reports')"
+      class="flex flex-col items-center cursor-pointer"
+      [class.text-caribbean_current-500]="activeMenu === 'reports'"
+      [class.text-gray-500]="activeMenu !== 'reports'"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 17v-6m3 6v-6m3 6v-6M3 19h18a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+        />
+      </svg>
+      <span class="text-xs">Relatórios</span>
+    </div>
   </div>
 </div>
