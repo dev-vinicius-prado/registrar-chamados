@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LayoutComponent } from "../layout/layout.component";
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  imports: []
+  imports: [LayoutComponent]
 })
 export class ProfileComponent {
   user = {
