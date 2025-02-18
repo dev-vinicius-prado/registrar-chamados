@@ -29,19 +29,19 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.router.navigate(['/dashboard']);
-    // if (this.loginForm.valid) {
-    //   this.authService.login(this.loginForm.value).then(
-    //     (response) => {
-    //       localStorage.setItem('token', response.data.token);
-    //     }
-    //   ).catch(
-    //     (error) => {
-    //       alert('Erro ao fazer login. Verifique suas credenciais.');
-    //     }
-    //   );
-    // } else {
-    //   alert('Por favor, preencha todos os campos corretamente.');
-    // }
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).then(
+        (response) => {
+          localStorage.setItem('token', response.token);
+          this.router.navigate(['/dashboard']);
+        }
+      ).catch(
+        (error) => {
+          alert('Erro ao fazer login. Verifique suas credenciais.');
+        }
+      );
+    } else {
+      alert('Por favor, preencha todos os campos corretamente.');
+    }
   }
 }

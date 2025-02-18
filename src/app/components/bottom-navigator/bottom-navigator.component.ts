@@ -22,7 +22,7 @@ export class BottomNavigatorComponent {
     switch (this.activeMenu) {
       case 'dashboard':
         return 0;
-      case 'register-call':
+      case 'register':
         return menuWidth;
       case 'profile':
         return menuWidth * 2;

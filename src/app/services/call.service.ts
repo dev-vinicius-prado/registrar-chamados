@@ -11,6 +11,17 @@ export class CallService {
     return axios.get(this.apiUrl).then((response) => response.data);
   }
 
+  createCall(newCall: {
+    cliente: any;
+    descricao: any;
+    foto: string;
+    geolocalizacao: string;
+    dataHora: string;
+    situacao: string;
+  }) {
+    return axios.post(this.apiUrl, newCall)
+  }
+
   updateCall(id: string, updatedData: any) {
     return axios.put(`${this.apiUrl}/${id}`, updatedData);
   }

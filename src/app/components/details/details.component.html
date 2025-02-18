@@ -1,5 +1,9 @@
 <app-layout>
   <div class="p-8 bg-jet-900 min-h-screen text-white">
+    <h1 class="text-3xl font-bold text-caribbean_current-500 mb-6">
+      Detalhes do chamado
+    </h1>
+
     <!-- Toast Alert -->
     <div
       *ngIf="showToast"
@@ -37,22 +41,22 @@
       </div>
 
       <!-- Botões de Ação -->
-      <div class="mt-6 flex gap-4">
+      <div class="space-y-2 mt-2">
         <button
           (click)="updateCallStatus('PENDENTE')"
-          class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+          class="w-full px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
         >
           PENDENTE
         </button>
         <button
           (click)="updateCallStatus('FECHADO')"
-          class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+          class="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
         >
           FECHADO
         </button>
         <button
           (click)="updateCallStatus('CANCELADO')"
-          class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          class="w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
         >
           CANCELAR
         </button>

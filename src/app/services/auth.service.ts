@@ -18,7 +18,7 @@ export class AuthService {
       );
 
       if (user) {
-        return { toke: `mock-token-${user.id}`, role: user.role };
+        return { token: `mock-token-${user.id}`, role: user.role };
       }
       throw new Error('Credenciais inválidas!')
     });

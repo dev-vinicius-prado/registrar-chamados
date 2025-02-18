@@ -1,0 +1,103 @@
+<app-layout>
+  <div class="p-8 bg-jet-900 min-h-screen text-white">
+    <h1 class="text-3xl font-bold text-caribbean_current-500 mb-6">
+      Registrar Chamado
+    </h1>
+
+    <!-- Formulário -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Cliente -->
+      <div>
+        <label
+          for="client"
+          class="block text-sm font-medium text-caribbean_current-300"
+          >Cliente:
+        </label>
+        <select
+          id="client"
+          formControlName="client"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+        >
+          <option *ngFor="let client of clients" [value]="client">
+            {{ client }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Descrição -->
+      <div>
+        <label
+          for="description"
+          class="block text-sm font-medium text-caribbean_current-300"
+          >Descrição:
+        </label>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="4"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+        ></textarea>
+      </div>
+
+      <!-- Câmera -->
+      <div>
+        <label class="block text-sm font-medium text-caribbean_current-300"
+          >Foto:
+        </label>
+        <div class="mt-1 flex flex-col items-center">
+          <video
+            id="camera"
+            autoplay
+            playsinline
+            class="w-full h-auto rounded-md bg-black"
+          ></video>
+          <button
+            type="button"
+            (click)="startCamera()"
+            class="mt-2 px-4 py-2 bg-caribbean_current-500 text-white rounded-md hover:bg-caribbean_current-600"
+          >
+            Iniciar Câmera
+          </button>
+          <button
+            type="button"
+            (click)="capturePhoto()"
+            class="mt-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+          >
+            Tirar Foto
+          </button>
+          <button
+            type="button"
+            (click)="stopCamera()"
+            class="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
+            Parar Câmera
+          </button>
+        </div>
+        <div *ngIf="capturedPhoto" class="mt-4">
+          <img
+            [src]="capturedPhoto"
+            alt="Foto Capturada"
+            class="w-full h-auto rounded-md"
+          />
+        </div>
+      </div>
+
+      <!-- Geolocalização -->
+      <div>
+        <label class="block text-sm font-medium text-caribbean_current-300"
+          >Geolocalização:
+        </label>
+        <p class="mt-1 text-gray-400">{{ geolocation }}</p>
+      </div>
+
+      <!-- Botão de Envio -->
+      <button
+        type="submit"
+        [disabled]="registerForm.invalid || !capturedPhoto"
+        class="w-full bg-caribbean_current-500 text-white py-2 px-4 rounded-md hover:bg-caribbean_current-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-caribbean_current-500"
+      >
+        Registrar Chamado
+      </button>
+    </form>
+  </div>
+</app-layout>
