@@ -1,0 +1,109 @@
+<app-layout>
+  <div class="p-8 bg-jet-900 min-h-screen text-white">
+    <h1 class="text-3xl font-bold text-caribbean_current-500 mb-6">Relatórios</h1>
+
+    <!-- Formulário de Filtros -->
+    <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="space-y-4">
+      <!-- Tipo de Relatório -->
+      <div>
+        <label for="reportType" class="block text-sm font-medium text-gray-300">Tipo de Relatório</label>
+        <select
+          id="reportType"
+          formControlName="reportType"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+        >
+          <option value="period">Por Período</option>
+          <option value="client">Por Cliente</option>
+          <option value="operator">Por Operador</option>
+        </select>
+      </div>
+
+      <!-- Filtros Condicionais -->
+      <div *ngIf="filterForm.get('reportType')?.value === 'period'">
+        <label for="startDate" class="block text-sm font-medium text-gray-300">Data Inicial</label>
+        <input
+          type="date"
+          id="startDate"
+          formControlName="startDate"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+        />
+        <label for="endDate" class="block text-sm font-medium text-gray-300 mt-2">Data Final</label>
+        <input
+          type="date"
+          id="endDate"
+          formControlName="endDate"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+        />
+      </div>
+
+      <div *ngIf="filterForm.get('reportType')?.value === 'client'">
+        <label for="client" class="block text-sm font-medium text-gray-300">Cliente</label>
+        <select
+          id="client"
+          formControlName="client"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+        >
+          <option *ngFor="let client of getClients()" [value]="client">{{ client }}</option>
+        </select>
+      </div>
+
+      <div *ngIf="filterForm.get('reportType')?.value === 'operator'">
+        <label for="operator" class="block text-sm font-medium text-gray-300">Operador</label>
+        <select
+          id="operator"
+          formControlName="operator"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+        >
+          <option *ngFor="let operator of getOperators()" [value]="operator">{{ operator }}</option>
+        </select>
+      </div>
+
+      <!-- Botão de Aplicar Filtros -->
+      <button
+        type="submit"
+        class="px-4 py-2 bg-caribbean_current-500 text-white rounded-md hover:bg-caribbean_current-600"
+      >
+        Aplicar Filtros
+      </button>
+    </form>
+
+    <!-- Botões de Exportação -->
+    <div class="flex gap-4 mt-6">
+      <button
+        (click)="exportToPDF()"
+        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+      >
+        Exportar PDF
+      </button>
+      <button
+        (click)="exportToExcel()"
+        class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+      >
+        Exportar Excel
+      </button>
+    </div>
+
+    <!-- Tabela de Resultados -->
+    <div class="mt-6">
+      <table class="w-full bg-white text-black rounded-lg overflow-hidden">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Cliente</th>
+            <th class="p-2">Descrição</th>
+            <th class="p-2">Data-Hora</th>
+            <th class="p-2">Situação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let call of filteredCalls" class="border-b">
+            <td class="p-2">{{ call.cliente }}</td>
+            <td class="p-2">{{ call.descricao }}</td>
+            <td class="p-2">{{ call.dataHora | date:'short' }}</td>
+            <td class="p-2">{{ call.situacao }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</app-layout>

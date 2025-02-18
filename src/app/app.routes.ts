@@ -7,6 +7,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { ManagerGuard } from './guards/manager.guard';
+import { ReportsComponent } from './components/reports/reports.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -33,8 +34,8 @@ export const routes: Routes = [
   },
   {
     path: 'reports',
-    component: ProfileComponent,
-    canActivate: [AuthGuard, ManagerGuard], 
+    component: ReportsComponent,
+    canActivate: [AuthGuard, ManagerGuard],
   },
 
 ];
