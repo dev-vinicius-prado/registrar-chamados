@@ -1,8 +1,18 @@
 <app-layout>
-  <div class="p-8 bg-jet-900 min-h-screen text-white">
+  <div class="p-8 bg-jet-900 min-h-screen mb-8 text-white">
     <h1 class="text-3xl font-bold text-caribbean_current-500 mb-6">
       Registrar Chamado
     </h1>
+        <!-- Toast Alert -->
+        <div
+        *ngIf="showToast"
+        class="fixed top-4 right-4 p-4 rounded-md shadow-lg"
+        [class.bg-green-500]="toastType === 'success'"
+        [class.bg-red-500]="toastType === 'error'"
+        [class.bg-yellow-500]="toastType === 'warning'"
+      >
+        {{ toastMessage }}
+      </div>
 
     <!-- Formulário -->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
@@ -93,7 +103,7 @@
       <!-- Botão de Envio -->
       <button
         type="submit"
-        [disabled]="registerForm.invalid || !capturedPhoto"
+        [disabled]="registerForm.invalid"
         class="w-full bg-caribbean_current-500 text-white py-2 px-4 rounded-md hover:bg-caribbean_current-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-caribbean_current-500"
       >
         Registrar Chamado

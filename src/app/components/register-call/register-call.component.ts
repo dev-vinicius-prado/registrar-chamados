@@ -1,5 +1,5 @@
 import { NgFor, NgForOf, NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,16 +8,19 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CallService } from '../../services/call.service';
-import { LayoutComponent } from "../layout/layout.component";
+import { LayoutComponent } from '../layout/layout.component';
 
 @Component({
   selector: 'app-register-call',
   templateUrl: './register-call.component.html',
   styleUrls: ['./register-call.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule,NgIf, NgFor, NgForOf, LayoutComponent],
+  imports: [ReactiveFormsModule, NgIf, NgFor, NgForOf, LayoutComponent],
 })
 export class RegisterCallComponent {
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastType: string = 'success'; // 'success' ou 'error'
   registerForm: FormGroup;
   clients = ['Cliente A', 'Cliente B', 'Cliente C'];
   geolocation: string = 'Carregando...';
@@ -85,13 +88,24 @@ export class RegisterCallComponent {
       this.videoStream.getTracks().forEach((track) => track.stop());
     }
   }
+  showToastMessage(message: string, type: string) {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    // Esconde o toast após 3 segundos
+    setTimeout(() => {
+      this.showToast = false;
+      this.getBack();
+    }, 3000);
+  }
 
   onSubmit() {
-    if (this.registerForm.valid && this.capturedPhoto) {
+    if (this.registerForm.valid) {
       const newCall = {
         cliente: this.registerForm.value.client,
         descricao: this.registerForm.value.description,
-        foto: this.capturedPhoto,
+        foto: this.capturedPhoto ? this.capturedPhoto : '',
         geolocalizacao: this.geolocation,
         dataHora: new Date().toISOString(),
         situacao: 'ABERTO',
@@ -99,18 +113,18 @@ export class RegisterCallComponent {
 
       this.callService.createCall(newCall).then(
         () => {
-          alert('Chamado registrado com sucesso!');
-          this.router.navigate(['/dashboard']);
+          this.showToastMessage('Chamado registrado com sucesso!', 'success');
         },
         (error) => {
-          alert('Erro ao registrar o chamado.');
+          this.showToastMessage('Erro ao registrar o chamado.', 'error');
         }
       );
     } else {
-      alert('Por favor, preencha todos os campos corretamente.');
+      this.showToastMessage('Por favor, preencha todos os campos corretamente.', 'warning');
     }
   }
-  getBack() { // Armazena a foto capturada
-   this.router.navigate(['/dashboard'])
+  getBack() {
+    // Armazena a foto capturada
+    this.router.navigate(['/dashboard']);
   }
 }
