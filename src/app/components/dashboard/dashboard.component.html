@@ -21,10 +21,10 @@
     </div>
   </div>
     <!-- Lista de Chamados -->
-    <div class="space-y-4">
+    <div class="dash-space-y-4">
       <div
         *ngFor="let call of filteredCalls"
-        class="bg-white p-4 rounded-lg shadow-lg text-black cursor-pointer"
+        class="bg-white p-4 rounded-lg shadow-lg text-black cursor-pointer last:mb-10"
         (click)="detailCall(call.id)"
       >
         <h2 class="font-bold">{{ call.cliente }}</h2>
