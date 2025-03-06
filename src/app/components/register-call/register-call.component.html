@@ -1,55 +1,94 @@
 <app-layout>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">Register New Call</h1>
+    <h1 class="text-3xl font-bold text-caribbean_current-500 mb-6">
+      Registrar Chamado
+    </h1>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Toast Alert -->
+    <div
+      *ngIf="showToast"
+      class="fixed top-4 right-4 p-4 rounded-md shadow-lg"
+      [class.bg-green-500]="toastType === 'success'"
+      [class.bg-red-500]="toastType === 'error'"
+      [class.bg-yellow-500]="toastType === 'warning'"
+    >
+      {{ toastMessage }}
+    </div>
+
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      class="space-y-6 mb-10"
+    >
       <!-- Client Selection -->
       <div class="form-group">
-        <label for="client" class="block text-sm font-medium mb-2">Client</label>
+        <label for="client" class="block text-sm font-medium text-caribbean_current-300"
+        >Cliente:
+      </label>
         <select
           id="client"
           formControlName="client"
-          class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-caribbean_current"
-          [class.border-red-500]="registerForm.get('client')?.invalid && registerForm.get('client')?.touched"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+          [class.border-red-500]="
+            registerForm.get('client')?.invalid &&
+            registerForm.get('client')?.touched
+          "
         >
-          <option value="">Select a client</option>
+          <option value="">Selecione o cliente</option>
           <option *ngFor="let client of clients" [value]="client">
-            {{client}}
+            {{ client }}
           </option>
         </select>
-        <div *ngIf="registerForm.get('client')?.invalid && registerForm.get('client')?.touched"
-             class="text-red-500 text-sm mt-1">
-          Client selection is required
+        <div
+          *ngIf="
+            registerForm.get('client')?.invalid &&
+            registerForm.get('client')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Selecionar um cliente é obrigatório!
         </div>
       </div>
 
       <!-- Description -->
       <div class="form-group">
-        <label for="description" class="block text-sm font-medium mb-2">Description</label>
+        <label for="description" class="block text-sm font-medium text-caribbean_current-300"
+        >Descrição:
+      </label>
         <textarea
           id="description"
           formControlName="description"
           rows="4"
-          class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-caribbean_current"
-          [class.border-red-500]="registerForm.get('description')?.invalid && registerForm.get('description')?.touched"
+          class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-white focus:outline-none focus:ring-indigo_dye-500 focus:border-indigo_dye-500 sm:text-sm"
+          [class.border-red-500]="
+            registerForm.get('description')?.invalid &&
+            registerForm.get('description')?.touched
+          "
         ></textarea>
-        <div *ngIf="registerForm.get('description')?.invalid && registerForm.get('description')?.touched"
-             class="text-sm text-red-500 mt-1">
+        <div
+          *ngIf="
+            registerForm.get('description')?.invalid &&
+            registerForm.get('description')?.touched
+          "
+          class="text-sm text-red-500 mt-1"
+        >
           <span *ngIf="registerForm.get('description')?.errors?.['required']">
-            Description is required
+            Descrever o chamado é obrigatório!
           </span>
           <span *ngIf="registerForm.get('description')?.errors?.['minlength']">
-            Description must be at least 10 characters
+            A descrição deve ter pelo menos 10 caracteres.
           </span>
         </div>
       </div>
 
       <!-- Camera Section -->
       <div class="space-y-4">
-        <h2 class="text-lg font-semibold">Photo Documentation</h2>
+        <h2 class="text-lg font-semibold">Foto:</h2>
 
         <!-- Camera Preview -->
-        <div class="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
+        <div
+          class="relative aspect-video bg-gray-100 rounded-lg overflow-hidden"
+        >
           <video
             #camera
             id="camera"
@@ -73,27 +112,27 @@
             type="button"
             (click)="startCamera()"
             *ngIf="!videoStream && !capturedPhoto"
-            class="btn-primary"
+            class="mt-2 px-4 py-2 bg-caribbean_current-500 text-white rounded-md hover:bg-caribbean_current-600"
           >
-            Start Camera
+            Abrir câmera
           </button>
 
           <button
             type="button"
             (click)="capturePhoto()"
             *ngIf="videoStream && !capturedPhoto"
-            class="btn-primary"
+            class="mt-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           >
-            Take Photo
+            Registrar foto
           </button>
 
           <button
             type="button"
             (click)="stopCamera(); capturedPhoto = null"
             *ngIf="capturedPhoto"
-            class="btn-secondary"
+            class="mt-2 px-4 py-2 bg-caribbean_current-500 text-white rounded-md hover:bg-caribbean_current-400"
           >
-            Retake Photo
+            Atualizar foto
           </button>
         </div>
       </div>
@@ -101,10 +140,19 @@
       <!-- Geolocation -->
       <div class="bg-gray-50 p-4 rounded-lg">
         <div class="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-gray-600"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+              clip-rule="evenodd"
+            />
           </svg>
-          <span class="text-sm">Location: {{geolocation}}</span>
+          <span class="text-sm">Location: {{ geolocation }}</span>
         </div>
       </div>
 
@@ -112,10 +160,10 @@
       <div class="flex justify-end">
         <button
           type="submit"
-          class="btn-primary"
+          class="w-full bg-caribbean_current-500 text-white py-2 px-4 rounded-md hover:bg-caribbean_current-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-caribbean_current-500"
           [disabled]="registerForm.invalid || !capturedPhoto"
         >
-          Register Call
+          Registrar chamado
         </button>
       </div>
     </form>
@@ -123,12 +171,17 @@
     <!-- Toast Message -->
     <div
       *ngIf="showToast"
-      [class]="'fixed bottom-4 right-4 p-4 rounded-lg shadow-lg ' +
-              (toastType === 'success' ? 'bg-green-500' :
-               toastType === 'error' ? 'bg-red-500' : 'bg-yellow-500')"
+      [class]="
+        'fixed bottom-4 right-4 p-4 rounded-lg shadow-lg ' +
+        (toastType === 'success'
+          ? 'bg-green-500'
+          : toastType === 'error'
+          ? 'bg-red-500'
+          : 'bg-yellow-500')
+      "
       class="text-white"
     >
-      {{toastMessage}}
+      {{ toastMessage }}
     </div>
   </div>
 </app-layout>
