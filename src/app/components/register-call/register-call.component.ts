@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { CallService } from '../../services/call.service';
 import { LayoutComponent } from '../layout/layout.component';
+import { ApiError } from '../../models/apiError.types';
 
 @Component({
   selector: 'app-register-call',
@@ -132,8 +133,17 @@ export class RegisterCallComponent implements OnDestroy {
     };
 
     this.callService.createCall(newCall)
-      .then(() => this.showToastMessage('Call registered successfully!', 'success'))
-      .catch(() => this.showToastMessage('Failed to register call.', 'error'));
+    .then(response => {
+      // Handle success
+      this.showToastMessage('Call registered successfully!', 'success');
+    })
+    .catch((error: ApiError) => {
+      // Handle error
+      this.showToastMessage(
+        `Error: ${error.message} (Status: ${error.statusCode})`,
+        'error'
+      );
+    });
   }
 
   showToastMessage(message: string, type: string): void {
