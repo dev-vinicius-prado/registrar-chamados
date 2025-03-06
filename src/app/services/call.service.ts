@@ -8,6 +8,10 @@ import { ApiError } from '../models/apiError.types';
 export class CallService {
   private apiUrl = 'https://67b3aab7392f4aa94fa7f285.mockapi.io/chamados';
 
+  getCalls() {
+    return axios.get(this.apiUrl).then((response) => response.data);
+  }
+
   async createCall(newCall: {
     cliente: any;
     descricao: any;
