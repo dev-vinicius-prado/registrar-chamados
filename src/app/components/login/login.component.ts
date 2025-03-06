@@ -39,8 +39,13 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.router.navigate(['/dashboard']);
+          },
           error: (error) => {
             this.isLoading = false;
+            this.errorMessage = 'Login failed. Please check your credentials.';
             console.error('Login failed:', error);
           }
         });

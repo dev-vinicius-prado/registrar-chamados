@@ -1,5 +1,5 @@
 import { NgFor, NgForOf, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,114 +17,139 @@ import { LayoutComponent } from '../layout/layout.component';
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, NgFor, NgForOf, LayoutComponent],
 })
-export class RegisterCallComponent {
+export class RegisterCallComponent implements OnDestroy {
+  @ViewChild('camera') videoElement!: ElementRef<HTMLVideoElement>;
+
   showToast: boolean = false;
   toastMessage: string = '';
-  toastType: string = 'success'; // 'success' ou 'error'
-  registerForm: FormGroup;
+  toastType: string = 'success';
+  registerForm!: FormGroup;
   clients = ['Cliente A', 'Cliente B', 'Cliente C'];
   geolocation: string = 'Carregando...';
-  videoStream: MediaStream | null = null; // Armazena o stream da câmera
-  capturedPhoto: string | null = null; // Armazena a foto capturada
+  videoStream: MediaStream | null = null;
+  capturedPhoto: string | null = null;
+  isCameraActive: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private callService: CallService,
     private router: Router
   ) {
+    this.initForm();
+    this.captureGeolocation();
+  }
+
+  private initForm(): void {
     this.registerForm = this.fb.group({
       client: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]],
     });
-
-    this.captureGeolocation();
   }
 
-  captureGeolocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.geolocation = `${position.coords.latitude}, ${position.coords.longitude}`;
-        },
-        (error) => {
-          this.geolocation = 'Erro ao capturar geolocalização';
-        }
-      );
-    } else {
-      this.geolocation = 'Geolocalização não suportada';
-    }
-  }
-
-  async startCamera() {
+  async startCamera(): Promise<void> {
     try {
-      this.videoStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
-      const videoElement = document.getElementById(
-        'camera'
-      ) as HTMLVideoElement;
-      if (videoElement) {
-        videoElement.srcObject = this.videoStream;
+      const constraints = {
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      };
+
+      this.videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+      if (this.videoElement?.nativeElement) {
+        this.videoElement.nativeElement.srcObject = this.videoStream;
+        this.isCameraActive = true;
       }
     } catch (error) {
-      alert('Erro ao acessar a câmera: ' + error);
+      this.showToastMessage('Failed to access camera. Please check permissions.', 'error');
     }
   }
 
-  capturePhoto() {
-    const videoElement = document.getElementById('camera') as HTMLVideoElement;
+  capturePhoto(): void {
+    if (!this.videoElement?.nativeElement || !this.isCameraActive) {
+      this.showToastMessage('Camera is not active', 'error');
+      return;
+    }
+
+    const video = this.videoElement.nativeElement;
     const canvas = document.createElement('canvas');
-    canvas.width = videoElement.videoWidth;
-    canvas.height = videoElement.videoHeight;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
     const context = canvas.getContext('2d');
     if (context) {
-      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-      this.capturedPhoto = canvas.toDataURL('image/png'); // Converte para base64
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      this.capturedPhoto = canvas.toDataURL('image/jpeg', 0.8);
+      this.stopCamera();
     }
   }
 
-  stopCamera() {
+  stopCamera(): void {
     if (this.videoStream) {
-      this.videoStream.getTracks().forEach((track) => track.stop());
+      this.videoStream.getTracks().forEach(track => track.stop());
+      this.videoStream = null;
+      this.isCameraActive = false;
     }
   }
-  showToastMessage(message: string, type: string) {
+
+  private captureGeolocation(): void {
+    if (!navigator.geolocation) {
+      this.geolocation = 'Geolocation is not supported';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.geolocation = `${position.coords.latitude}, ${position.coords.longitude}`;
+      },
+      (error) => {
+        const errorMessages: { [key: number]: string } = {
+          1: 'Permission denied',
+          2: 'Position unavailable',
+          3: 'Timeout'
+        };
+        this.geolocation = errorMessages[error.code] || 'Unknown error';
+      },
+      { timeout: 10000, enableHighAccuracy: true }
+    );
+  }
+
+  onSubmit(): void {
+    if (!this.registerForm.valid) {
+      this.showToastMessage('Please fill in all required fields correctly.', 'warning');
+      return;
+    }
+
+    const newCall = {
+      cliente: this.registerForm.value.client,
+      descricao: this.registerForm.value.description,
+      foto: this.capturedPhoto || '',
+      geolocalizacao: this.geolocation,
+      dataHora: new Date().toISOString(),
+      situacao: 'ABERTO',
+    };
+
+    this.callService.createCall(newCall)
+      .then(() => this.showToastMessage('Call registered successfully!', 'success'))
+      .catch(() => this.showToastMessage('Failed to register call.', 'error'));
+  }
+
+  showToastMessage(message: string, type: string): void {
     this.toastMessage = message;
     this.toastType = type;
     this.showToast = true;
 
-    // Esconde o toast após 3 segundos
     setTimeout(() => {
       this.showToast = false;
-      this.getBack();
+      if (type === 'success') {
+        this.router.navigate(['/dashboard']);
+      }
     }, 3000);
   }
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      const newCall = {
-        cliente: this.registerForm.value.client,
-        descricao: this.registerForm.value.description,
-        foto: this.capturedPhoto ? this.capturedPhoto : '',
-        geolocalizacao: this.geolocation,
-        dataHora: new Date().toISOString(),
-        situacao: 'ABERTO',
-      };
-
-      this.callService.createCall(newCall).then(
-        () => {
-          this.showToastMessage('Chamado registrado com sucesso!', 'success');
-        },
-        (error) => {
-          this.showToastMessage('Erro ao registrar o chamado.', 'error');
-        }
-      );
-    } else {
-      this.showToastMessage('Por favor, preencha todos os campos corretamente.', 'warning');
-    }
-  }
-  getBack() {
-    // Armazena a foto capturada
-    this.router.navigate(['/dashboard']);
+  ngOnDestroy(): void {
+    this.stopCamera();
   }
 }
