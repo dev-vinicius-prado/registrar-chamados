@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { CallService } from '../../services/call.service';
 import { LayoutComponent } from '../layout/layout.component';
 import { ApiError } from '../../models/apiError.types';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-register-call',
@@ -34,7 +35,8 @@ export class RegisterCallComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private callService: CallService,
-    private router: Router
+    private router: Router,
+    private imageService: ImageService,
   ) {
     this.initForm();
     this.captureGeolocation();
@@ -94,6 +96,24 @@ export class RegisterCallComponent implements OnDestroy {
       this.isCameraActive = false;
     }
   }
+
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      // Validação do tamanho
+      if (file.size > 5 * 1024 * 1024) {
+        this.showToastMessage('Imagem maior que 5MB. Selecione outra.', 'error');
+        return;
+      }
+
+      this.imageService.compressImage(file).then((compressedImage) => {
+        this.registerForm.patchValue({ image: compressedImage });
+        this.showToastMessage('Imagem comprimida com sucesso!', 'success');
+      });
+    }
+  }
+
 
   private captureGeolocation(): void {
     if (!navigator.geolocation) {
