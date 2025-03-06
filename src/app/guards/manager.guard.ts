@@ -8,7 +8,7 @@ export class ManagerGuard {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    const role = localStorage.getItem('role');
+    const role = sessionStorage.getItem('role');
     if (role === 'MANAGER') {
       return true; // Permite o acesso à rota
     }

@@ -8,7 +8,7 @@ export class AuthGuard {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (!token) {
       // Redireciona para a tela de login se o token não existir
       alert('Você precisa estar logado para acessar esta página.');
