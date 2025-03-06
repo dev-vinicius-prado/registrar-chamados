@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NgIf } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +18,9 @@ import { NgIf } from '@angular/common';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  isLoading = false;
+  errorMessage: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -28,21 +33,21 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).then(
-        (response) => {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('role', response.role);
-          this.router.navigate(['/dashboard']);
-        }
-      ).catch(
-        (error) => {
-          alert('Erro ao fazer login. Verifique suas credenciais.');
-        }
-      );
-    } else {
-      alert('Por favor, preencha todos os campos corretamente.');
+      this.isLoading = true;
+      this.authService.login(this.loginForm.value)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Login failed:', error);
+          }
+        });
     }
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
